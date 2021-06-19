@@ -1,7 +1,6 @@
 ---
 id: babel-plugin-transform-runtime
 title: @babel/plugin-transform-runtime
-sidebar_label: transform-runtime
 ---
 
 A plugin that enables the re-use of Babel's injected helper code to save on codesize.
@@ -60,7 +59,6 @@ With options (and their defaults):
         "corejs": false,
         "helpers": true,
         "regenerator": true,
-        "useESModules": false,
         "version": "7.0.0-beta.0"
       }
     ]
@@ -79,7 +77,7 @@ babel --plugins @babel/plugin-transform-runtime script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
+require("@babel/core").transformSync("code", {
   plugins: ["@babel/plugin-transform-runtime"],
 });
 ```
@@ -91,6 +89,13 @@ require("@babel/core").transform("code", {
 `false`, `2`, `3` or `{ version: 2 | 3, proposals: boolean }`, defaults to `false`.
 
 e.g. `['@babel/plugin-transform-runtime', { corejs: 3 }],`
+
+<details>
+  <summary>History</summary>
+| Version | Changes |
+| --- | --- |
+| `v7.4.0` | Supports `{ proposals: boolean }` |
+</details>
 
 Specifying a number will rewrite the helpers that need polyfillable APIs to reference helpers from that (major) version of `core-js` instead
 Please note that `corejs: 2` only supports global variables (e.g. `Promise`) and static properties (e.g. `Array.from`), while `corejs: 3` also supports instance properties (e.g. `[].includes`).
@@ -131,7 +136,16 @@ For more information, see [Regenerator aliasing](#regenerator-aliasing).
 
 ### `useESModules`
 
+> ⚠️ This option has been deprecated: starting from version `7.13.0`, `@babel/runtime`'s `package.json` uses `"exports"` option to automatically choose between CJS and ESM helpers.
+
 `boolean`, defaults to `false`.
+
+<details>
+  <summary>History</summary>
+| Version | Changes |
+| --- | --- |
+| `v7.13.0` | This option has been deprecated |
+</details>
 
 When enabled, the transform will use helpers that do not get run through
 `@babel/plugin-transform-modules-commonjs`. This allows for smaller builds in module
@@ -175,6 +189,7 @@ By default transform-runtime assumes that `@babel/runtime@7.0.0` is installed. I
 `@babel/runtime` (or their corejs counterparts e.g. `@babel/runtime-corejs3`) installed or listed as a dependency, transform-runtime can use more advanced features.
 
 For example if you depend on `@babel/runtime-corejs2@7.7.4` you can transpile your code with
+
 ```json
 {
   "plugins": [
@@ -189,6 +204,7 @@ For example if you depend on `@babel/runtime-corejs2@7.7.4` you can transpile yo
   ]
 }
 ```
+
 which results in a smaller bundle size.
 
 ## Technical details

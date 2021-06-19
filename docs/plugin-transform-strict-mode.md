@@ -1,7 +1,7 @@
 ---
 id: babel-plugin-transform-strict-mode
 title: @babel/plugin-transform-strict-mode
-sidebar_label: transform-strict-mode
+sidebar_label: strict-mode
 ---
 
 This plugin may be enabled via `@babel/plugin-transform-modules-commonjs`.
@@ -34,13 +34,11 @@ npm install --save-dev @babel/plugin-transform-strict-mode
 
 ### With a configuration file (Recommended)
 
-
 ```json
 {
   "plugins": ["@babel/plugin-transform-strict-mode"]
 }
 ```
-
 
 ### Via CLI
 
@@ -51,8 +49,7 @@ babel --plugins @babel/plugin-transform-strict-mode script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-transform-strict-mode"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-transform-strict-mode"],
 });
 ```
-

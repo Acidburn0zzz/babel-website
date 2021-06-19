@@ -1,8 +1,10 @@
 ---
 id: babel-plugin-proposal-nullish-coalescing-operator
 title: @babel/plugin-proposal-nullish-coalescing-operator
-sidebar_label: proposal-nullish-coalescing-operator
+sidebar_label: nullish-coalescing-operator
 ---
+
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 ## Example
 
@@ -17,7 +19,10 @@ var foo = object.foo ?? "default";
 ```javascript
 var _object$foo;
 
-var foo = (_object$foo = object.foo) !== null && _object$foo !== void 0 ? _object$foo : "default";
+var foo =
+  (_object$foo = object.foo) !== null && _object$foo !== void 0
+    ? _object$foo
+    : "default";
 ```
 
 > **NOTE:** We cannot use `!= null` here because `document.all == null` and
@@ -48,8 +53,8 @@ babel --plugins @babel/plugin-proposal-nullish-coalescing-operator script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-proposal-nullish-coalescing-operator"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-proposal-nullish-coalescing-operator"],
 });
 ```
 
@@ -62,6 +67,17 @@ require("@babel/core").transform("code", {
 When `true`, this transform will pretend `document.all` does not exist,
 and perform loose equality checks with `null` instead of strict equality checks
 against both `null` and `undefined`.
+
+> ⚠️ Consider migrating to the top level [`noDocumentAll`](assumptions.md#nodocumentall) assumption.
+
+```jsonc
+// babel.config.json
+{
+  "assumptions": {
+    "noDocumentAll": true
+  }
+}
+```
 
 #### Example
 
@@ -83,5 +99,4 @@ var foo = (_object$foo = object.foo) != null ? _object$foo : "default";
 
 ## References
 
-* [Proposal: Nullish Coalescing](https://github.com/tc39-transfer/proposal-nullish-coalescing)
-
+- [Proposal: Nullish Coalescing](https://github.com/tc39-transfer/proposal-nullish-coalescing)

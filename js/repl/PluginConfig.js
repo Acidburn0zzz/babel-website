@@ -48,7 +48,7 @@ const shippedProposalsConfig: MultiPackagesConfig = {
 
 const envPresetDefaults = {
   browsers: {
-    placeholder: "> 2%, ie 11, safari > 9",
+    placeholder: "defaults, not ie 11, not ie_mob 11",
   },
   electron: {
     min: 0.3,
@@ -57,11 +57,14 @@ const envPresetDefaults = {
   },
   node: {
     min: 0.1,
-    default: "8.9",
+    default: "10.13",
     step: 0.1,
   },
   builtIns: {
     default: "usage",
+  },
+  corejs: {
+    default: "3.6",
   },
 };
 
@@ -76,13 +79,14 @@ const pluginConfigs: Array<PluginConfig> = [
     baseUrl: "https://unpkg.com",
     label: "Prettify",
     package: "prettier",
-    version: "1.13.0",
-    files: ["standalone.js", "parser-babylon.js"],
+    version: "2",
+    files: ["standalone.js", "parser-babel.js"],
   },
 ];
 
 const replDefaults: ReplState = {
-  browsers: "",
+  browsers: "defaults, not ie 11, not ie_mob 11",
+  bugfixes: true,
   build: "",
   builtIns: false,
   spec: false,
@@ -104,12 +108,13 @@ const replDefaults: ReplState = {
     compiledSize: 0,
     rawSize: 0,
   },
-  presets: "es2015,react,stage-2",
+  presets: "react,stage-2,env",
   prettier: false,
   showSidebar: true,
   shippedProposals: false,
   targets: "",
   version: "",
+  reactRuntime: "classic",
   decoratorsLegacy: false,
   decoratorsBeforeExport: false,
   pipelineProposal: "minimal",

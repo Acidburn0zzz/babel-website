@@ -1,9 +1,10 @@
 ---
 id: babel-plugin-proposal-optional-chaining
 title: @babel/plugin-proposal-optional-chaining
-sidebar_label: proposal-optional-chaining
+sidebar_label: optional-chaining
 ---
 
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 ## Example
 
@@ -24,10 +25,10 @@ const safe = obj?.qux?.baz; // undefined
 
 // Optional chaining and normal chaining can be intermixed
 obj?.foo.bar?.baz; // Only access `foo` if `obj` exists, and `baz` if
-                   // `bar` exists
+// `bar` exists
 
 // Example usage with bracket notation:
-obj?.['foo']?.bar?.baz // 42
+obj?.["foo"]?.bar?.baz; // 42
 ```
 
 ### Calling deeply nested functions
@@ -88,10 +89,12 @@ new exists?.(); // undefined
 
 ### Deleting deeply nested properties
 
+Added in: `v7.8.0`
+
 ```js
 const obj = {
   foo: {
-    bar: {}
+    bar: {},
   },
 };
 
@@ -123,8 +126,8 @@ babel --plugins @babel/plugin-proposal-optional-chaining script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-proposal-optional-chaining"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-proposal-optional-chaining"],
 });
 ```
 
@@ -138,6 +141,17 @@ When `true`, this transform will pretend `document.all` does not exist,
 and perform loose equality checks with `null` instead of strict equality checks
 against both `null` and `undefined`.
 
+> ⚠️ Consider migrating to the top level [`noDocumentAll`](assumptions.md#nodocumentall) assumption.
+
+```jsonc
+// babel.config.json
+{
+  "assumptions": {
+    "noDocumentAll": true
+  }
+}
+```
+
 #### Example
 
 In
@@ -146,13 +160,13 @@ In
 foo?.bar;
 ```
 
-Out (`loose === true`)
+Out (`noDocumentAll === true`)
 
 ```javascript
 foo == null ? void 0 : foo.bar;
 ```
 
-Out (`loose === false`)
+Out (`noDocumentAll === false`)
 
 ```javascript
 foo === null || foo === void 0 ? void 0 : foo.bar;
@@ -162,5 +176,4 @@ foo === null || foo === void 0 ? void 0 : foo.bar;
 
 ## References
 
-* [Proposal: Optional Chaining](https://github.com/tc39/proposal-optional-chaining)
-
+- [Proposal: Optional Chaining](https://github.com/tc39/proposal-optional-chaining)

@@ -1,8 +1,10 @@
 ---
 id: babel-plugin-transform-member-expression-literals
 title: @babel/plugin-transform-member-expression-literals
-sidebar_label: transform-member-expression-literals
+sidebar_label: member-expression-literals
 ---
+
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 ## Example
 
@@ -49,8 +51,7 @@ babel --plugins @babel/plugin-transform-member-expression-literals script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-transform-member-expression-literals"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-transform-member-expression-literals"],
 });
 ```
-

@@ -35,7 +35,7 @@ const users = loadYaml("./data/users.yml").map(user => ({
   image: `/img/users/${user.logo}`,
 }));
 
-const sponsorsManual = loadYaml("./data/sponsors.yml").map(sponsor => ({
+const sponsorsManual = (loadYaml("./data/sponsors.yml") || []).map(sponsor => ({
   ...sponsor,
   image: sponsor.image || path.join("/img/sponsors/", sponsor.logo),
 }));
@@ -44,8 +44,7 @@ const sponsorsDownloaded = require(path.join(__dirname, "/data/sponsors.json"));
 const sponsors = [
   ...sponsorsManual,
   ...sponsorsDownloaded
-    // filter out Handshake for special tier
-    .filter(sponsor => sponsor.slug !== "handshake")
+    .filter(sponsor => sponsor.slug !== "github-sponsors")
     .map(sponsor => {
       let website = sponsor.website;
       if (typeof website == "string") {
@@ -63,6 +62,9 @@ const sponsors = [
         url: website,
         image: sponsor.avatar || "/img/user.svg",
         description: sponsor.description,
+        monthly: sponsor.monthlyDonations,
+        yearly: sponsor.yearlyDonations,
+        total: sponsor.totalDonations,
       };
     }),
 ];
@@ -88,6 +90,7 @@ const siteConfig = {
   title: "Babel",
   tagline: "The compiler for next generation JavaScript",
   url: "https://babeljs.io",
+  v6Url: "https://v6.babeljs.io/docs/setup/",
   baseUrl: "/",
   getDocUrl: (doc, language) =>
     `${siteConfig.baseUrl}docs/${language || DEFAULT_LANGUAGE}/${doc}`,
@@ -120,6 +123,7 @@ const siteConfig = {
   headerIcon: "img/babel.svg",
   footerIcon: "img/babel.svg",
   favicon: "img/favicon.png",
+  ogImage: "img/ogImage.png",
   colors: {
     primaryColor: "#323330",
     secondaryColor: "#323330",
@@ -161,7 +165,8 @@ const siteConfig = {
   // ----
   scrollToTop: true,
   // markdownPlugins: [],
-  // cname
+  // cname,
+  // docsSideNavCollapsible: true,
 };
 
 module.exports = siteConfig;

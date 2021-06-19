@@ -1,7 +1,7 @@
 ---
 id: babel-plugin-transform-remove-debugger
 title: babel-plugin-transform-remove-debugger
-sidebar_label: transform-remove-debugger
+sidebar_label: remove-debugger
 ---
 
 ## Example
@@ -42,8 +42,7 @@ babel --plugins transform-remove-debugger script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["transform-remove-debugger"]
+require("@babel/core").transformSync("code", {
+  plugins: ["transform-remove-debugger"],
 });
 ```
-

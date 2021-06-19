@@ -1,6 +1,8 @@
 // @flow
 
 // Globals pre-loaded by Worker
+import { compareVersions } from "./Utils";
+
 declare var Babel: any;
 declare var prettier: any;
 declare var prettierPlugins: any;
@@ -28,7 +30,7 @@ type Return = {
 const DEFAULT_PRETTIER_CONFIG = {
   bracketSpacing: true,
   jsxBracketSameLine: false,
-  parser: "babylon",
+  parser: "babel",
   printWidth: 80,
   semi: true,
   singleQuote: false,
@@ -58,6 +60,8 @@ export default function compile(code: string, config: CompileConfig): Return {
   let useBuiltIns = false;
   let spec = false;
   let loose = false;
+  let bugfixes = false;
+  let corejs = "3.6";
   const transitions = new Transitions();
   const meta = {
     compiledSize: 0,
@@ -81,6 +85,9 @@ export default function compile(code: string, config: CompileConfig): Return {
     }
     if (envConfig.isBuiltInsEnabled) {
       useBuiltIns = !config.evaluate && envConfig.builtIns;
+      if (envConfig.corejs) {
+        corejs = envConfig.corejs;
+      }
     }
     if (envConfig.isNodeEnabled) {
       targets.node = envConfig.node;
@@ -91,15 +98,22 @@ export default function compile(code: string, config: CompileConfig): Return {
     if (envConfig.isLooseEnabled) {
       loose = envConfig.isLooseEnabled;
     }
+    if (envConfig.isBugfixesEnabled) {
+      bugfixes = envConfig.isBugfixesEnabled;
+    }
 
     presetEnvOptions = {
       targets,
       forceAllTransforms,
       shippedProposals,
       useBuiltIns,
+      corejs,
       spec,
       loose,
     };
+    if (Babel.version && compareVersions(Babel.version, "7.9.0") !== -1) {
+      (presetEnvOptions: any).bugfixes = bugfixes;
+    }
   }
 
   try {
@@ -125,6 +139,14 @@ export default function compile(code: string, config: CompileConfig): Return {
               decoratorsLegacy,
               decoratorsBeforeExport,
               pipelineProposal: presetsOptions.pipelineProposal,
+            },
+          ];
+        }
+        if (preset === "react") {
+          return [
+            "react",
+            {
+              runtime: presetsOptions.reactRuntime,
             },
           ];
         }

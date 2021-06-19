@@ -33,7 +33,7 @@ babel --plugins @babel/plugin-syntax-decorators script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
+require("@babel/core").transformSync("code", {
   plugins: ["@babel/plugin-syntax-decorators"]
 });
 ```
@@ -48,7 +48,7 @@ Use the legacy (stage 1) decorators syntax.
 
 ### `decoratorsBeforeExport`
 
-`boolean`, defaults to `false`.
+`boolean`
 
 ```js
 // decoratorsBeforeExport: true

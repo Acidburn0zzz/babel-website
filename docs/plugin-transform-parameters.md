@@ -1,8 +1,10 @@
 ---
 id: babel-plugin-transform-parameters
 title: @babel/plugin-transform-parameters
-sidebar_label: transform-parameters
+sidebar_label: parameters
 ---
+
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 This plugin transforms ES2015 parameters to ES5, this includes:
 
@@ -75,7 +77,7 @@ babel --plugins @babel/plugin-transform-parameters script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
+require("@babel/core").transformSync("code", {
   plugins: ["@babel/plugin-transform-parameters"],
 });
 ```
@@ -88,14 +90,25 @@ require("@babel/core").transform("code", {
 
 In loose mode, parameters with default values will be counted into the arity of the function. This is not spec behavior where these parameters do not add to function arity.
 
-The `loose` implementation is a more performant solution as JavaScript engines will fully optimize a function that doesn't reference `arguments`. Please do your own benchmarking and determine if this option is the right fit for your application.
+> ⚠️ Consider migrating to the top level [`ignoreFunctionLength`](assumptions.md#ignorefunctionlength) assumption.
+
+```jsonc
+// babel.config.json
+{
+  "assumptions": {
+    "ignoreFunctionLength": true
+  }
+}
+```
+
+Under the `ignoreFunctionLength` assumption, Babel will generate a more performant solution as JavaScript engines will fully optimize a function that doesn't reference `arguments`. Please do your own benchmarking and determine if this option is the right fit for your application.
 
 ```javascript
 // Spec behavior
 function bar1(arg1 = 1) {}
 bar1.length; // 0
 
-// Loose mode
+// ignoreFunctionLength: true
 function bar1(arg1 = 1) {}
 bar1.length; // 1
 ```

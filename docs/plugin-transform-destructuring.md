@@ -1,15 +1,17 @@
 ---
 id: babel-plugin-transform-destructuring
 title: @babel/plugin-transform-destructuring
-sidebar_label: transform-destructuring
+sidebar_label: destructuring
 ---
+
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 ## Examples
 
 **In**
 
 ```javascript
-let {x, y} = obj;
+let { x, y } = obj;
 
 let [a, b, ...rest] = arr;
 ```
@@ -55,8 +57,8 @@ babel --plugins @babel/plugin-transform-destructuring script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-transform-destructuring"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-transform-destructuring"],
 });
 ```
 
@@ -67,6 +69,17 @@ require("@babel/core").transform("code", {
 `boolean`, defaults to `false`.
 
 Enabling this option will assume that what you want to destructure is an array and won't use `Array.from` on other iterables.
+
+> ⚠️ Consider migrating to the top level [`iterableIsArray`](assumptions.md#iterableisarray) assumption.
+
+```jsonc
+// babel.config.json
+{
+  "assumptions": {
+    "iterableIsArray": true
+  }
+}
+```
 
 ### `useBuiltIns`
 
@@ -96,12 +109,36 @@ var { ...x } = z;
 
 ```js
 var _z = z,
-    x = Object.assign({}, _z);
+  x = Object.assign({}, _z);
 ```
 
 > You can read more about configuring plugin options [here](https://babeljs.io/docs/en/plugins#plugin-options)
 
+### `allowArrayLike`
+
+`boolean`, defaults to `false`
+
+Added in: `v7.10.0`
+
+This option allows destructuring array-like objects using the array destructuring syntax.
+
+An array-like object is an object with a `length` property: for example, `{ 0: "a", 1: "b", length: 2 }`. Note that, like real arrays, array-like objects can have "holes": `{ 1: "a", length: 3 }` is equivalent to `[ (hole), "a", (hole) ]`.
+
+While it is _not_ spec-compliant to destructure array-like objects as if they were arrays, there are many objects that would be _iterables_ in modern browsers with `Symbol.iterator` support. Some notable examples are the DOM collections, like `document.querySelectorAll("img.big")`, which are the main use case for this option.
+
+Please note that Babel allows destructuring `arguments` in old engines even if this option is disabled, because it's defined as _iterable_ in the ECMAScript specification.
+
+> ⚠️ Consider migrating to the top level [`arrayLikeIsIterable`](assumptions.md#arraylikeisiterable) assumption.
+
+```jsonc
+// babel.config.json
+{
+  "assumptions": {
+    "arrayLikeIsIterable": true
+  }
+}
+```
+
 ## References
 
-* [MDN: Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)
-
+- [MDN: Destructuring assignment](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment)

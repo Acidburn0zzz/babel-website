@@ -3,7 +3,7 @@ title: "Upgrade to Babel 7"
 id: v7-migration
 ---
 
-Refer users to this document when upgrading to Babel 7.
+Refer users to this document when upgrading to Babel 7. Check [here](v7-migration-api.md) for API/integration changes.
 
 <!--truncate-->
 
@@ -38,7 +38,7 @@ These presets should be substituted with the "env" preset.
 
 ## [Stage Preset Deprecations](https://babeljs.io/blog/2018/07/27/removing-babels-stage-presets)
 
-We are removing the stage presets in favor of explicit proposal usage. Can check the [stage-0 README](https://github.com/babel/babel/tree/master/packages/babel-preset-stage-0#babelpreset-stage-0) for more migration steps.
+We are removing the stage presets in favor of explicit proposal usage. Can check the [stage-0 README](https://github.com/babel/babel/tree/755ec192e22c6b6e00782e4810366d0166fdbebd/packages/babel-preset-stage-0#babelpreset-stage-0) for more migration steps.
 
 To do this automatically you can run [`npx babel-upgrade`](https://github.com/babel/babel-upgrade) (PR added [here](https://github.com/babel/babel-upgrade/pull/69)).
 
@@ -161,7 +161,7 @@ You can still use the shorthand version of a package name (remove the `preset-` 
 
 ### Scoped Packages
 
-The most important change is finally switching all packages to [scoped packages](/blog/2017/12/27/nearing-the-7.0-release.html#renames-scoped-packages-babel-x) (the folder names in the [monorepo](https://github.com/babel/babel/tree/master/packages) are not changed but the name in its `package.json` is).
+The most important change is finally switching all packages to [scoped packages](/blog/2017/12/27/nearing-the-7.0-release.html#renames-scoped-packages-babel-x) (the folder names in the [monorepo](https://github.com/babel/babel/tree/main/packages) are not changed but the name in its `package.json` is).
 
 This means there will be no more issues with accidental/intentional name squatting, a clear separation from community plugins, and a simpler naming convention.
 
@@ -275,7 +275,7 @@ In Babel 7, values are resolved consistently either relative to the config file 
 For `presets` and `plugins` values, this change means that the CLI will behave nicely in cases such as
 
 ```bash
-babel --presets @babel/preset-es2015 ../file.js
+babel --presets @babel/preset-env ../file.js
 ```
 
 Assuming your `node_modules` folder is in `.`, in Babel 6 this would fail because the preset could not be found.

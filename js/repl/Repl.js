@@ -5,7 +5,7 @@ import "regenerator-runtime/runtime";
 import { cx, css } from "emotion";
 import debounce from "lodash.debounce";
 import React from "react";
-import { prettySize } from "./Utils";
+import { prettySize, compareVersions } from "./Utils";
 import ErrorBoundary from "./ErrorBoundary";
 import CodeMirrorPanel from "./CodeMirrorPanel";
 import ReplOptions from "./ReplOptions";
@@ -18,6 +18,7 @@ import TimeTravelSlider from "./TimeTravelSlider";
 import {
   babelConfig,
   envPresetConfig,
+  envPresetDefaults,
   shippedProposalsConfig,
   pluginConfigs,
   runtimePolyfillConfig,
@@ -98,15 +99,8 @@ function toCamelCase(str) {
     });
 }
 
-function compareVersions(a: string, b: string): 1 | 0 | -1 {
-  const aParts = a.split(".");
-  const bParts = b.split(".");
-
-  for (let i = 0; i < 3; i++) {
-    if (+aParts[i] > +bParts[i]) return 1;
-    if (+aParts[i] < +bParts[i]) return -1;
-  }
-  return 0;
+function hasOwnProperty(obj, string) {
+  return Object.prototype.hasOwnProperty.call(obj, string);
 }
 
 class Repl extends React.Component<Props, State> {
@@ -232,6 +226,7 @@ class Repl extends React.Component<Props, State> {
           onExternalPluginRemove={this.handleRemoveExternalPlugin}
           onIsExpandedChange={this._onIsSidebarExpandedChange}
           onSettingChange={this._onSettingChange}
+          onVersionChange={this._onVersionChange}
           pluginState={state.plugins}
           presetState={state.presets}
           runtimePolyfillConfig={runtimePolyfillConfig}
@@ -287,7 +282,7 @@ class Repl extends React.Component<Props, State> {
     const babelState = await loadBundle(this.state.babel, this._workerApi);
     await this._loadInitialExternalPlugins();
 
-    if (compareVersions(babelState.version, "7.8.0") == -1) {
+    if (compareVersions(babelState.version, "7.8.0") === -1) {
       const envState = await this._loadPresetEnvStandalone();
 
       if (envState.didError) {
@@ -334,6 +329,10 @@ class Repl extends React.Component<Props, State> {
           }
         });
       }
+    }
+    // If no plugins are enabled, immediately invoke a new compilation
+    if (this._numLoadingPlugins === 0) {
+      this._compile(this.state.code, this._persistState);
     }
 
     // Babel (runtime) polyfill is large;
@@ -514,6 +513,15 @@ class Repl extends React.Component<Props, State> {
     name: string,
     value: any
   ) => {
+    if (name === "isBuiltInsEnabled") {
+      if (value) {
+        this.state.envConfig.builtIns ||= envPresetDefaults.builtIns.default;
+        this.state.envConfig.corejs ||= envPresetDefaults.corejs.default;
+      } else {
+        this.state.envConfig.builtIns = false;
+        this.state.envConfig.corejs = false;
+      }
+    }
     this.setState(
       state => ({
         [kind]: {
@@ -544,17 +552,17 @@ class Repl extends React.Component<Props, State> {
         return {
           runtimePolyfillState,
         };
-      } else if (state.hasOwnProperty(name)) {
+      } else if (hasOwnProperty(state, name)) {
         return {
           [name]: value,
         };
-      } else if (plugins.hasOwnProperty(name)) {
+      } else if (hasOwnProperty(plugins, name)) {
         plugins[name].isEnabled = !!value;
 
         return {
           plugins,
         };
-      } else if (presets.hasOwnProperty(name)) {
+      } else if (hasOwnProperty(presets, name)) {
         presets[name].isEnabled = !!value;
 
         return {
@@ -570,16 +578,12 @@ class Repl extends React.Component<Props, State> {
 
     const presetsArray = this._presetsToArray();
 
-    if (envConfig.isEnvPresetEnabled) {
-      presetsArray.push("env");
-    }
-
-    const builtIns = envConfig.isBuiltInsEnabled && envConfig.builtIns;
-
     const payload = {
       browsers: envConfig.browsers,
+      bugfixes: envConfig.isBugfixesEnabled,
       build: state.babel.build,
-      builtIns: builtIns,
+      builtIns: envConfig.builtIns,
+      corejs: envConfig.corejs,
       spec: envConfig.isSpecEnabled,
       loose: envConfig.isLooseEnabled,
       circleciRepo: state.babel.circleciRepo,
@@ -600,12 +604,28 @@ class Repl extends React.Component<Props, State> {
       decoratorsLegacy: state.presetsOptions.decoratorsLegacy,
       decoratorsBeforeExport: state.presetsOptions.decoratorsBeforeExport,
       pipelineProposal: state.presetsOptions.pipelineProposal,
+      reactRuntime: state.presetsOptions.reactRuntime,
       externalPlugins: state.externalPlugins
         .map(plugin => `${plugin.name}@${plugin.version}`)
         .join(","),
     };
     StorageService.set("replState", payload);
     UriUtils.updateQuery(payload);
+  };
+
+  _onVersionChange = (e: Event) => {
+    this.setState(
+      {
+        babel: {
+          ...this.state.babel,
+          version: e.target.value,
+        },
+      },
+      () => {
+        this._persistState();
+        location.reload();
+      }
+    );
   };
 
   _pluginsUpdatedSetStateCallback = () => {

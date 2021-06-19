@@ -26,6 +26,9 @@ const PromoSection = props => (
   </div>
 );
 
+const DummyMiniRepl = () => {
+  return <div className="dummy-hero-repl" />;
+};
 const MiniRepl = () => {
   return (
     <div className="hero-repl" hidden={true}>
@@ -58,25 +61,6 @@ const MiniRepl = () => {
   );
 };
 
-// const SpecialSponsors = () => {
-//   return (
-//     <div className="productShowcaseSection sponsors-special">
-//       <p>Special Sponsors</p>
-//       <div className="sponsors-special-logos">
-//         {siteConfig.sponsors
-//           .filter(sponsor => sponsor.type == "special")
-//           .map((sponsor, i) => {
-//             return (
-//               <a href={sponsor.url} target="_blank" key={i}>
-//                 <img src={sponsor.image} title={sponsor.name} />
-//               </a>
-//             );
-//           })}
-//       </div>
-//     </div>
-//   );
-// };
-
 const GetStarted = ({ language }) => {
   return (
     <div
@@ -97,73 +81,25 @@ const GetStarted = ({ language }) => {
         <a href={siteConfig.getPageUrl("videos.html", language)}>videos</a> on
         the people and concepts behind it.
       </p>
-      <p>
-        We&apos;re a small group of{" "}
-        <a href={siteConfig.getPageUrl("team.html", language)}>volunteers</a>{" "}
-        that spend their free time maintaining this project, funded by the
-        community. If Babel has benefited you in your work, becoming a{" "}
-        <a href="https://github.com/babel/babel/blob/master/CONTRIBUTING.md">
-          contributor
-        </a>{" "}
-        or <a href="https://opencollective.com/babel">sponsoring</a> might just
-        be a great way to give back!
-      </p>
     </div>
   );
 };
 
-// const WorkSponsors = () => {
-//   return (
-//     <div
-//       className="blockElement alignCenter twoByGridBlock sponsors-work"
-//       style={{ flexBasis: "40%", margin: 0 }}
-//     >
-//       <h2>Friends of Open Source</h2>
-//       <p style={{ fontSize: 16 }}>
-//         These companies are awesome and pay these engineers to work on Babel
-//       </p>
-//       <div className="productShowcaseSection">
-//         <div className="cards">
-//           {siteConfig.sponsors
-//             .filter(sponsor => {
-//               return sponsor.type == "work";
-//             })
-//             .map((sponsor, i) => {
-//               return (
-//                 <div className="card" key={i}>
-//                   <a href={sponsor.url} target="_blank" className="card-image">
-//                     <img
-//                       src={sponsor.image}
-//                       title={sponsor.name}
-//                       alt={`Sponsored by ${sponsor.name}`}
-//                     />
-//                   </a>
-//                   <div className="card-text">
-//                     <p>{sponsor.description}</p>
-//                   </div>
-//                   <div className="card-text">
-//                     <p>
-//                       sponsoring{" "}
-//                       <a href={`https://github.com/${sponsor.member}`}>
-//                         @{sponsor.member}
-//                       </a>
-//                     </p>
-//                   </div>
-//                 </div>
-//               );
-//             })}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
 const SponsorTier = props => {
-  const tierSponsors = siteConfig.sponsors.filter(
-    sponsor => sponsor.type == props.type && sponsor.tier === props.tier
-  );
+  let { min, max } = props;
+  const tierSponsors = siteConfig.sponsors.filter(sponsor => {
+    let value = Math.max(sponsor.monthly, sponsor.yearly / 12);
+    return +value >= min && (!max || (max && +value < max));
+  });
   return (
     <div>
+      <h3>{props.title}</h3>
+      <div>
+        are currently pledging or have donated an average of{" "}
+        {max ? `$${min}-$${max}` : `>$${min}`}
+        /month in the last year{" "}
+      </div>
+      <br />
       <ul className={`sponsors-tier tier-${props.tier}`}>
         {tierSponsors.map((sponsor, i) => (
           <li key={i}>
@@ -189,53 +125,47 @@ const SponsorTier = props => {
   );
 };
 
-const OpenCollectiveSponsors = () => {
-  const ocButton = {
-      title: "Become a sponsor",
-      link: "https://opencollective.com/babel",
-    },
-    patreonButton = {
-      title: "Become a patron",
-      link: "https://www.patreon.com/join/henryzhu",
-    };
+const ocButton = {
+  title: "Become a sponsor",
+  link: "https://opencollective.com/babel",
+};
 
+const OpenCollectiveSponsors = ({ language }) => {
   return (
     <div className="container paddingBottom">
       <div className="wrapper productShowcaseSection">
+        <h3>Current Sponsors</h3>
+        <p>
+          We&apos;re a small group of{" "}
+          <a href={siteConfig.getPageUrl("team.html", language)}>volunteers</a>{" "}
+          that spend their free time maintaining this project, funded by the
+          community. If Babel has benefited you in your work, becoming a{" "}
+          <a href="https://github.com/babel/babel/blob/master/CONTRIBUTING.md">
+            contributor
+          </a>{" "}
+          or <a href="https://opencollective.com/babel">sponsoring</a> might
+          just be a great way to give back!
+        </p>
         <div className="sponsor-tiers" id="sponsors">
-          <h3>Open Collective Sponsors</h3>
           <SponsorTier
             type="opencollective"
-            title="Base Support Sponsors"
-            tier="base-support-sponsor"
+            title="Base Support"
+            tier="base-support-sponsors"
+            min={2000}
           />
           <SponsorTier
             type="opencollective"
-            title="Gold Sponsors (Open Collective)"
+            title="Gold"
             tier="gold-sponsors"
+            min={1000}
+            max={2000}
           />
           <SponsorTier
             type="opencollective"
-            title="Silver Sponsors (Open Collective)"
+            title="Silver"
             tier="silver-sponsors"
-            button={ocButton}
-          />
-          <h3>Patreon Sponsors</h3>
-          <SponsorTier
-            type="patreon"
-            title="Gold Sponsors (Patreon)"
-            tier="gold-sponsors"
-          />
-          <SponsorTier
-            type="other"
-            title="Misc Sponsors"
-            tier="other-sponsors"
-          />
-          <SponsorTier
-            type="patreon"
-            title="Silver Sponsors (Patreon)"
-            tier="silver-sponsors"
-            button={patreonButton}
+            min={500}
+            max={1000}
           />
         </div>
       </div>
@@ -269,31 +199,17 @@ const Hero = ({ language }) => (
 
       <div className="hero__announcement">
         <span>
-          <strong>Babel 7 is out!</strong> Please read our{" "}
-          <a href="/blog/2018/08/27/7.0.0">announcement</a> and{" "}
-          <a href={siteConfig.getDocUrl("v7-migration", language)}>
-            upgrade guide
+          <strong>Babel 7.14 is released!</strong> Please read our{" "}
+          <a href="blog/2021/04/29/7.14.0">blog post</a> for highlights and{" "}
+          <a href="https://github.com/babel/babel/releases/tag/v7.14.0">
+            changelog
           </a>{" "}
-          for more information.
+          for more details!
         </span>
       </div>
 
+      <DummyMiniRepl />
       <MiniRepl language={language} />
-
-      <h3>Special Sponsor</h3>
-
-      <div className="sponsors-tier" style={{ margin: "10px 0" }}>
-        <a href="https://www.handshake.org" title="Handshake" target="_blank">
-          <img
-            src="https://handshake.org/images/landing/logo-light.svg"
-            alt="Sponsored by Handshake"
-            style={{ width: 180 }}
-          />
-          <div style={{ color: "#b7b8b7" }}>
-            Decentralized certificate authority and naming
-          </div>
-        </a>
-      </div>
     </div>
   </div>
 );
@@ -306,11 +222,8 @@ const Index = ({ language }) => {
       <div className="mainContainer" style={{ padding: 0 }}>
         <HomeContainer>
           <GetStarted language={language} />
-          {
-            // <WorkSponsors language={language} />
-          }
         </HomeContainer>
-        <OpenCollectiveSponsors />
+        <OpenCollectiveSponsors language={language} />
       </div>
     </div>
   );

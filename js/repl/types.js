@@ -11,11 +11,13 @@ export type PresetsOptions = {
   decoratorsLegacy: boolean,
   decoratorsBeforeExport: boolean,
   pipelineProposal: "smart" | "minimal" | "fsharp",
+  reactRuntime: "classic" | "automatic",
 };
 
 export type EnvConfig = {
   browsers: string,
   electron: ?string,
+  isBugfixesEnabled: boolean,
   isEnvPresetEnabled: boolean,
   isElectronEnabled: boolean,
   isBuiltInsEnabled: boolean,
@@ -23,6 +25,7 @@ export type EnvConfig = {
   isSpecEnabled: boolean,
   isLooseEnabled: boolean,
   builtIns: string | false,
+  corejs: string,
   forceAllTransforms: boolean,
   shippedProposals: boolean,
   version?: any,
@@ -107,8 +110,10 @@ export type CompileConfig = {
 
 export type ReplState = {
   browsers: string,
+  bugfixes: boolean,
   build: string,
   builtIns: string | boolean,
+  corejs: ?string,
   spec: boolean,
   loose: boolean,
   circleciRepo: string,
@@ -129,6 +134,7 @@ export type ReplState = {
   decoratorsLegacy: boolean,
   decoratorsBeforeExport: boolean,
   pipelineProposal: "minimal" | "smart" | "fsharp",
+  reactRuntime: "classic" | "automatic",
   externalPlugins: ?string,
 };
 

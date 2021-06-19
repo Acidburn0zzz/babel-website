@@ -1,8 +1,10 @@
 ---
 id: babel-plugin-transform-property-literals
 title: @babel/plugin-transform-property-literals
-sidebar_label: transform-property-literals
+sidebar_label: property-literals
 ---
+
+> **NOTE**: This plugin is included in `@babel/preset-env`
 
 ## Example
 
@@ -11,13 +13,13 @@ sidebar_label: transform-property-literals
 ```javascript
 var foo = {
   // changed
-  "bar": function () {},
-  "1": function () {},
+  const: function() {},
+  var: function() {},
 
   // not changed
-  "default": 1,
+  default: 1,
   [a]: 2,
-  foo: 1
+  foo: 1,
 };
 ```
 
@@ -25,12 +27,12 @@ var foo = {
 
 ```javascript
 var foo = {
-  bar: function () {},
-  1: function () {},
+  const: function() {},
+  var: function() {},
 
-  "default": 1,
+  default: 1,
   [a]: 2,
-  foo: 1
+  foo: 1,
 };
 ```
 
@@ -59,8 +61,7 @@ babel --plugins @babel/plugin-transform-property-literals script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-transform-property-literals"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-transform-property-literals"],
 });
 ```
-

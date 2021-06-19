@@ -131,6 +131,7 @@ export const persistedStateToPresetsOptions = (
       !persistedState.decoratorsLegacy &&
       !!persistedState.decoratorsBeforeExport,
     pipelineProposal: persistedState.pipelineProposal || "minimal",
+    reactRuntime: persistedState.reactRuntime || "classic",
   };
 };
 
@@ -143,7 +144,7 @@ export const persistedStateToEnvConfig = (
 
   const envConfig: EnvConfig = {
     browsers: persistedState.browsers,
-    electron: envPresetDefaults.electron.default,
+    electron: persistedState.electron ?? envPresetDefaults.electron.default,
     isEnvPresetEnabled,
     isElectronEnabled: false,
     isNodeEnabled: false,
@@ -152,9 +153,11 @@ export const persistedStateToEnvConfig = (
     isBuiltInsEnabled: !!persistedState.builtIns,
     isSpecEnabled: !!persistedState.spec,
     isLooseEnabled: !!persistedState.loose,
+    isBugfixesEnabled: !!persistedState.bugfixes,
     node: envPresetDefaults.node.default,
     version: persistedState.version,
-    builtIns: envPresetDefaults.builtIns.default,
+    builtIns: persistedState.builtIns ?? envPresetDefaults.builtIns.default,
+    corejs: persistedState.corejs ?? envPresetDefaults.corejs.default,
   };
 
   decodeURIComponent(persistedState.targets)

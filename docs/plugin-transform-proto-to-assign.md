@@ -1,7 +1,7 @@
 ---
 id: babel-plugin-transform-proto-to-assign
 title: @babel/plugin-transform-proto-to-assign
-sidebar_label: transform-proto-to-assign
+sidebar_label: proto-to-assign
 ---
 
 ## Detail
@@ -70,12 +70,11 @@ babel --plugins @babel/plugin-transform-proto-to-assign script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-transform-proto-to-assign"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-transform-proto-to-assign"],
 });
 ```
 
 ## References
 
-* [MDN: Object.prototype.\_\_proto\_\_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)
-
+- [MDN: Object.prototype.\_\_proto\_\_](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/proto)

@@ -680,3 +680,21 @@
 - name: Skype
   url: https://www.skype.com
   logo: skype-logo.svg
+- name: SwissDev Jobs
+  url: https://swissdevjobs.ch
+  logo: swissdev-java-jobs-logo.svg
+- name: BroadbandUK
+  url: https://broadbandspeedtest.org.uk
+  logo: broadbanduk.svg
+- name: Toptal
+  url: https://www.toptal.com
+  logo: toptal.svg
+- name: Rubrik
+  url: https://www.rubrik.com
+  logo: rubrik.svg
+- name: BlueHive
+  url: https://www.bluehive.com
+  logo: bluehive.svg
+- name: Wormhole
+  url: https://wormhole.app
+  logo: wormhole.svg

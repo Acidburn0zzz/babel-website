@@ -1,10 +1,9 @@
 ---
 id: babel-preset-flow
 title: @babel/preset-flow
-sidebar_label: flow
 ---
 
-This preset includes the following plugins:
+This preset is recommended if you use [Flow](https://flow.org/en/docs/getting-started/), a static type checker for JavaScript code. It includes the following plugins:
 
 - [@babel/plugin-transform-flow-strip-types](plugin-transform-flow-strip-types.md)
 
@@ -47,7 +46,7 @@ babel --presets @babel/preset-flow script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
+require("@babel/core").transformSync("code", {
   presets: ["@babel/preset-flow"],
 });
 ```
@@ -73,6 +72,23 @@ Would get parsed as a nested binary expression:
 
 ```javascript
 f < T > e;
+```
+
+### `allowDeclareFields`
+
+`boolean`, defaults to `false`
+
+Added in: `v7.9.0`
+
+> NOTE: This will be enabled by default in Babel 8
+
+When enabled, type-only class fields are only removed if they are prefixed with the `declare` modifier:
+
+```javascript
+class A {
+  declare foo: string; // Removed
+  bar: string; // Initialized to undefined
+}
 ```
 
 > You can read more about configuring preset options [here](https://babeljs.io/docs/en/presets#preset-options)

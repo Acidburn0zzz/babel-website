@@ -1,7 +1,7 @@
 ---
 id: babel-plugin-proposal-partial-application
 title: @babel/plugin-proposal-partial-application
-sidebar_label: proposal-partial-application
+sidebar_label: partial-application
 ---
 
 ## Example
@@ -50,6 +50,8 @@ super(?)          // `?` not supported in |SuperCall|
 $ npm install --save-dev @babel/plugin-proposal-partial-application
 ```
 
+## Usage
+
 ### With a configuration file (Recommended)
 
 ```json
@@ -67,13 +69,11 @@ babel --plugins @babel/plugin-proposal-partial-application script.js
 ### Via Node API
 
 ```javascript
-require("@babel/core").transform("code", {
-  plugins: ["@babel/plugin-proposal-partial-application"]
+require("@babel/core").transformSync("code", {
+  plugins: ["@babel/plugin-proposal-partial-application"],
 });
 ```
 
-
 ## References
 
-* [Proposal: Partial Application](https://github.com/tc39/proposal-partial-application)
-
+- [Proposal: Partial Application](https://github.com/tc39/proposal-partial-application)
